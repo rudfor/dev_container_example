@@ -84,11 +84,21 @@ RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
 # INSTALL ANSIBLE and tools
+
+# just tool very simple command line executor ... just run X
 RUN conda install -c conda-forge just==1.14.0
+# ansible core and base tooling
 RUN conda install -c conda-forge ansible==8.3.0 --yes
+# ansible linting tool
 RUN conda install -c conda-forge ansible-lint==6.18.0 --yes
+# Sphinx toolstack for documentation writing
+RUN conda install -c conda-forge sphinx=7.2.6
+# Unit testing for ansible
 RUN pip install molecule-docker==2.1.0
-RUN pip install pywinrm[credssp]==0.4.3
+# breathe allows doxygen XML exported content to be integrated into RST
+RUN pip install breathe==4.35.0
+# optional for ansible remote controlling of windows
+RUN pip install pywinrm[credssp]==0.4.3 
 
 ###### Set to non root user #####
 USER ${GENERIC_USER}

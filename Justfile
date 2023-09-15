@@ -79,11 +79,17 @@ docker_build target='example':
     @[ -e ".devcontainer/{{target}}" ] || (echo "Error: Docker Path {{target}} does not exist."; exit 1)
     @docker build .devcontainer/{{target}} -t {{docker_repo}}/{{target}}
 
-# docker run {{target}} 
+# docker run {{target}}
 docker_run target='example':
     @echo "docker build - {{target}}"
     @[ -e ".devcontainer/{{target}}" ] || (echo "Error: Docker Path {{target}} does not exist."; exit 1)
     @docker run -it --rm {{docker_repo}}/{{target}}
+
+# docker push {{target}}
+docker_push target='example': docker_build
+    @echo "docker push - {{target}}"
+    @[ -e ".devcontainer/{{target}}" ] || (echo "Error: Docker Path {{target}} does not exist."; exit 1)
+    @docker push {{docker_repo}}/{{target}}
 
 # list available docker recipes
 docker_list:
