@@ -3,7 +3,6 @@
 This quick guide helps users start to use the devContainer for vscode.
 
 ## Start your workspace in a devcontainer
-
 [pre-requisite] : "Dev Containers" extension installed
 
 In vs code run the following command (Ctr+Shift+P):
@@ -16,6 +15,39 @@ See the .devcontainer/<example>/Dockerfile for implementation details
 - you will get a fresh Ubuntu 22.04 Docker with miniconda installed and python 3.10 with tox installed. \
 (subject to change based on the FROM: line in the docker file)
 
+## Quick Start Guide
+[pre-requisite] : "Just and docker are locally installed"
+[tips] : 
+  prebuild: build locally first as there are certain limits within vscode when building docker files and it is faster from commaand line.
+
+```bash
+mkdir demo
+cd demo
+git clone git@github.com:rudfor/dev_container_example.git
+cd dev_container_example/
+just docker_build example
+just docker_build dev_container
+code .
+```
+
+## Docker structure
+
+There are  4 "users" active
+
+```shell
+Base image
+# ======================================
+root #  for apt-get etc
+toolinstall # for tools like conda and python
+            # avoid do not run pip as root warnings and other security concerns.
+generic_user # to have a non root user as default 
+# ======================================
+
+Dev Container: 
+# ======================================
+vscode # to allow the user to have local changable access 
+       # and avoid conflict with generic_user
+```
 
 ## Tooling available in the Dev Container
 
@@ -23,8 +55,10 @@ See the .devcontainer/<example>/Dockerfile for implementation details
 
 Tox is a python test execution wrapper: 
 to run tox you need to specify the following environment variable:
-- PIP_EXTRA_INDEX_URL:\
-PIP_EXTRA_INDEX_URL={$user}:{$PAT}@<your pypi repo>/api/pypi/pypi/simple
+```bash
+# PIP_EXTRA_INDEX_URL
+PIP_EXTRA_INDEX_URL={$user}:{$PAT}@{your pypi repo}/api/pypi/pypi/simple
+```
 
 ### Miniconda
 
